@@ -26,7 +26,12 @@ Every extracted drawing is saved without its box border, as a PNG with a text fi
 | Path                                       | Content                                  |
 | ------------------------------------------ | ---------------------------------------- |
 | `src/`, `include/`, `CMakeLists.txt` | C++ / OpenCV processing chain            |
+| `review-tool/`                           | Script to check the extracted snippets   |
 | `*.pdf`                                  | Project subject and course slides        |
+
+## Review tool
+
+The extraction is never perfect, so `review-tool/review.py` goes through the snippets of one label and size folder and asks yes or no for each. The wrong ones are moved to an `unsorted/` folder. See `review-tool/README.md`.
 
 ## License
 
