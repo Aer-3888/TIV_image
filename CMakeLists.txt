@@ -19,6 +19,11 @@ target_link_libraries(Projet_OpenCV_CMake ${OpenCV_LIBS})
 add_executable(test_detect_plus src/test_detect_plus.cpp)
 target_link_libraries(test_detect_plus ${OpenCV_LIBS})
 
+add_executable(crop_icons src/crop_icons.cpp)
+target_link_libraries(crop_icons ${OpenCV_LIBS})
+target_compile_definitions(crop_icons PRIVATE
+        "TIV_IMAGE_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+
 add_executable(align_pages
         include/alignment.hpp
         src/alignment.cpp
