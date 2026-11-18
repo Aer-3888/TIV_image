@@ -56,6 +56,10 @@ cd build && cmake .. && make binary_strip && ./binary_strip
 
 The extraction is never perfect, so `review-tool/review.py` goes through the snippets of one label and size folder and asks yes or no for each. The wrong ones are moved to an `unsorted/` folder. See `review-tool/README.md`.
 
+## Contributing
+
+Branch and commit conventions are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 GPL-3.0. See [LICENSE](LICENSE).
