@@ -20,7 +20,7 @@ using namespace cv;
 int main (void) {
 
 	//charge et affiche l'image (� MODIFIER) :
-	string imName = "../Lenna.png";
+	string imName = "../assets/Lenna.png";
 	Mat im = imread(imName);
 	Mat im2;
 	if(im.data == nullptr){
