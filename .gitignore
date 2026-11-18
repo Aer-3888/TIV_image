@@ -1,3 +1,6 @@
+__pycache__/
+.venv/
+
 # Projet C++
 build/
 NicIcon/
