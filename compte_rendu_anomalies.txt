@@ -1,0 +1,221 @@
+COMPTE RENDU - ANOMALIES DES SCANS NicIcon (NicIcon/all-scans)
+=================================================================
+
+806 pages analysées, toutes au même format : 2480 x 3508 px (A4 à 300 dpi), RGB.
+Nom de fichier = SSSPP.png : SSS = numéro du scripteur (000 à 034), PP = numéro
+de page (00 à 21 = pages de dessins, 22 = page de texte ; 1 page 23 : 02123).
+
+Méthode utilisée pour l'analyse (script de test, hors projet) :
+  1. Binarisation (Otsu) + détection des 2 croix "+" (haut-droite, bas-gauche)
+     par morphologie : ouverture avec un segment horizontal et un vertical de
+     40 px, intersection des deux, puis vérification des 4 branches.
+  2. Recalage : similitude (rotation + translation + échelle) calculée à partir
+     des 2 croix (cv::estimateAffinePartial2D) vers une page de référence (00104).
+  3. Les 35 cases (7 lignes x 5 colonnes) sont placées avec les positions de la
+     page de référence, puis on vérifie que les cadres retombent bien dessus.
+  4. Encre du stylo = pixels colorés (saturation HSV > 70) : les cadres et les
+     icônes imprimées sont gris, l'encre des scripteurs est bleu/cyan.
+  Numérotation des cases ci-dessous : LxCy = ligne x, colonne y (1 = en haut à gauche).
+
+RÉSUMÉ
+------
+  Pages de dessins (grille 7x5)            : 770
+  Pages de texte (pas de grille)           : 36
+  Pages où une croix n'est pas trouvée     : 3
+  Pages tournées de plus de 0.5°           : 21  (max 1.12°)
+  Pages décalées de plus de 20 px          : 40  (max 69 px)
+  Pages avec dessin qui DÉPASSE d'une case : 56  (130 cases)
+  Pages avec dessin qui TOUCHE un cadre    : 269  (808 cases)
+  Cases avec très peu d'encre détectée     : 19  (sur 9 pages)
+
+1. PAGES DE TEXTE (à exclure de l'extraction)
+---------------------------------------------
+Chaque scripteur a une page 22 sans grille : un paragraphe recopié à la main
+dans un grand rectangle. Le scripteur 021 a aussi une page 23 (02123).
+Elles ont bien les 2 croix, mais aucun cadre ne retombe sur la grille.
+Détection : tester la présence des cadres après recalage (ou la taille du plus
+grand rectangle trouvé), ne pas se fier seulement au numéro de page.
+Liste : 00022, 00122, 00222, 00322, 00422, 00522, 00622, 00722, 00822, 00922,
+    01022, 01122, 01222, 01322, 01422, 01522, 01622, 01722, 01822, 01922,
+    02022, 02122, 02123, 02222, 02322, 02422, 02522, 02622, 02722, 02822,
+    02922, 03022, 03122, 03222, 03322, 03422
+
+2. ROTATION ET DÉCALAGE (feuille mal posée sur le scanner)
+-----------------------------------------------------------
+Sur les pages de dessins : rotation médiane 0.13°, décalage médian 8 px.
+La plupart des pages sont presque droites, mais certaines non. Une rotation
+de 1° décale le bas d'une case de ~5 px et la dernière ligne de la page de
+~40 px : sans recalage, on coupe les dessins ou on garde des bouts de cadre.
+Avec le recalage par les 2 croix, les cadres retombent sur la grille de
+référence (vérifié à l'oeil sur 00715, 00104, 00105, 01002...). Pour les
+pages du scripteur 031, l'ajustement des cadres est un peu moins bon : à vérifier.
+Les scripteurs 031, 033 et 034 ont toute une série de pages tournées/décalées
+(scanner ou chargeur mal réglé pour ce lot).
+
+Pages tournées de plus de 0.5° (angle en degrés) :
+00715 (-1.12), 01712 (+0.97), 03310 (-0.83), 03311 (-0.75), 03318 (+0.69),
+    03105 (+0.68), 03104 (+0.67), 03108 (+0.67), 03317 (+0.66), 03107 (+0.65),
+    03420 (+0.65), 03102 (+0.64), 03109 (+0.64), 03106 (+0.63), 03418 (+0.61),
+    03421 (+0.61), 03419 (+0.59), 03110 (+0.58), 03103 (+0.57), 03417 (+0.52),
+    03315 (-0.52)
+
+Pages décalées de plus de 20 px (décalage de la croix haut-droite, dx/dy) :
+02608 (-68/-10), 03318 (-52/-14), 03317 (-51/-16), 03421 (-42/-16), 03419
+    (-42/-12), 03420 (-39/-14), 01712 (-10/-38), 03115 (-35/-12), 03108
+    (-32/-16), 03418 (-32/-16), 03310 (+34/+6), 03311 (+33/+3), 01920
+    (-25/-20), 03106 (-28/-12), 03105 (-25/-17), 03116 (-28/-8), 03107
+    (-27/-10), 03104 (-24/-14), 00707 (-26/-8), 03103 (-26/-8), 03417
+    (-24/-11), 03111 (-23/-10), 03109 (-22/-12), 03102 (-22/-12), 03110
+    (-20/-14), 00720 (-23/-4), 00708 (-23/-6), 03117 (-22/-6), 02815
+    (-14/-18), 03100 (-21/-6), 01305 (-21/-5), 02219 (-18/-11), 01904
+    (-8/-20), 03118 (-18/-10), 03101 (-20/-6), 00709 (-20/-6), 00715
+    (-15/+14), 00721 (-20/-4), 03119 (-19/-7), 01313 (-19/-6)
+
+3. CROIX DIFFICILES À DÉTECTER
+------------------------------
+a) Marque au stylo sur la croix : beaucoup de scripteurs ont fait un petit
+   rond ou un point au stylo au centre d'une croix (ex : 00103, 00106, 00112,
+   01315). Le trait est alors coupé au milieu après binarisation.
+   -> Avec une ouverture de 70 px, 72 pages échouaient. Avec des segments de
+      40 px (chaque demi-branche fait ~55 px) + dilatation avant
+      l'intersection, il n'en reste que 3.
+   -> Pour matchTemplate : la marque fait baisser le score, il faut un seuil
+      tolérant (et un modèle à la bonne taille : la croix fait ~110 px dans le
+      scan, image_plus.png fait 71 px, il est trop petit).
+b) Fausse croix : un dessin dans la grille peut ressembler à un "+" (icônes
+   "+" / croix dans une case, ex : 01302, 02806, 02019). Il faut chercher dans
+   une zone limitée autour de la position attendue et garder le candidat le
+   plus proche de cette position.
+c) Bandeau gris juste sous la croix haut-droite : il est détecté comme une
+   croix si on ne l'enlève pas (supprimer d'abord les zones épaisses).
+d) Les 3 pages restantes en échec :
+   - 01316 : page décalée de ~300 px vers la droite : la croix haut-droite est
+    coupée par le bord du scan (il n'en reste qu'un bout). Cas à gérer :
+    recaler avec une seule croix + le bandeau/les cadres, ou rejeter la page.
+   - 02306 : croix bas-gauche avec une petite coupure dans le trait
+    (marque/effacement) -> une fermeture morphologique avant détection devrait
+    suffire.
+   - 02720 : croix bas-gauche avec une petite coupure dans le trait -> même
+    remède que 02306.
+
+4. DESSINS QUI DÉPASSENT DES CASES
+----------------------------------
+Des traits sortent du cadre (souvent un trait qui continue sur la case
+voisine ou en dessous). C'est le cas signalé pour 00104/00105.
+Conséquences : si on découpe juste à l'intérieur du cadre, le dessin est
+tronqué ; si on prend une marge, on récupère des bouts du dessin voisin.
+Piste : découper avec une marge, puis garder seulement les composantes
+connexes d'encre qui ont l'essentiel de leurs pixels à l'intérieur de la case.
+
+Pages et cases concernées (encre détectée dans une bande de 40 px autour du cadre) :
+  00001 : L1C1
+  00008 : L5C1
+  00016 : L3C5
+  00104 : L2C5
+  00105 : L2C2 L3C4 L3C5
+  00114 : L5C1
+  00120 : L3C1 L3C2
+  00121 : L1C1 L1C4 L3C2
+  00402 : L7C2
+  00407 : L3C3
+  00410 : L3C2 L3C3
+  00419 : L7C3
+  00510 : L2C2 L2C4 L4C2 L5C1
+  00612 : L4C1
+  01002 : L1C1 L1C2 L1C5 L2C5
+  01003 : L2C1 L3C5
+  01006 : L2C5 L4C4 L6C3
+  01008 : L2C2 L5C4
+  01010 : L3C1 L3C3 L5C4 L5C5
+  01011 : L1C3 L1C4 L2C2 L4C1
+  01012 : L2C2 L2C3 L7C2 L7C3
+  01013 : L4C3 L4C4
+  01015 : L4C3
+  01400 : L6C2
+  01411 : L3C5
+  01419 : L2C5
+  01515 : L4C4
+  01607 : L3C1
+  01612 : L3C1
+  02104 : L3C2 L5C5 L6C2 L6C5
+  02120 : L3C4
+  02417 : L2C4
+  02604 : L5C3 L5C4 L6C1 L6C2 L6C3 L6C4
+  02606 : L1C4 L3C1 L3C5
+  02609 : L3C3
+  02610 : L5C4
+  02611 : L3C5 L6C3
+  02612 : L1C3 L1C4
+  02613 : L3C5 L4C5 L6C1 L6C4 L6C5 L7C1 L7C4
+  02614 : L1C4 L1C5 L7C4 L7C5
+  02615 : L1C4 L7C4 L7C5
+  02616 : L6C2 L6C3 L6C4 L7C3
+  02617 : L3C1 L3C2 L3C4 L3C5 L4C1 L4C3 L4C4 L5C1 L7C1 L7C2 L7C3 L7C4 L7C5
+  02618 : L1C3 L5C1 L5C2
+  02619 : L6C2 L6C4 L7C5
+  02620 : L1C3 L1C5 L5C5
+  02621 : L7C3
+  02715 : L2C5
+  02907 : L1C5 L5C2
+  03016 : L2C1
+  03207 : L4C4
+  03211 : L3C1
+  03215 : L3C2 L3C4 L3C5 L6C4
+  03217 : L4C2
+  03218 : L7C4
+  03220 : L4C5
+
+En plus, 269 pages ont des dessins qui touchent ou chevauchent le trait du
+cadre sans le dépasser vraiment : le cadre et l'encre se collent, donc il ne
+faut pas extraire le dessin par "plus grand contour" sans séparer d'abord
+l'encre (couleur) du cadre (gris).
+
+5. ENCRE TRÈS CLAIRE OU DESSINS MINUSCULES
+------------------------------------------
+Quelques cases sont vues comme presque vides : en vérifiant, ce sont des
+dessins tracés avec un stylo très pâle ou des icônes "small" très petites
+(ex : 00106 L4C1 est un petit "3"). Sur les 5 cas vérifiés à l'oeil, aucune
+case n'était réellement vide.
+Conséquence : un seuil fixe sur le nombre de pixels d'encre, ou une
+binarisation en niveaux de gris seule, peut rater ces dessins. Il vaut mieux
+travailler sur la saturation (couleur) que sur le gris.
+  00106 : L4C1
+  00111 : L2C5
+  00214 : L2C1
+  00316 : L5C5
+  00420 : L4C4 L4C5 L5C1 L5C2
+  02500 : L2C1 L2C2
+  02905 : L6C3 L6C4 L6C5 L7C1
+  02919 : L3C1 L3C2
+  02920 : L2C1 L2C2 L2C3
+
+6. AUTRES PARTICULARITÉS DES PAGES
+----------------------------------
+- Le bandeau gris en haut à droite contient des petites cases blanches que
+  le scripteur a cochées (X au stylo) : c'est de l'encre hors de la grille,
+  à ne pas confondre avec un dessin.
+- Marques au stylo sur les croix (voir 3a).
+- Chaque page a une colonne d'icônes imprimées à gauche avec une taille
+  écrite dessous (small / medium / large) : l'ordre des icônes change d'une
+  page à l'autre, il faut lire cette colonne (ou une table de correspondance
+  par numéro de page) pour étiqueter chaque ligne.
+- Le numéro de page imprimé (ex : "00104") apparaît en haut à gauche et en
+  bas à droite : utile pour vérifier qu'on ne s'est pas trompé de fichier.
+- Aucune page à l'envers n'a été trouvée (aucune croix détectée dans les
+  coins opposés).
+- Échelle : toujours ~1.000 (entre 0.999 et 1.001), pas de redimensionnement
+  entre les scans.
+
+7. CE QU'IL FAUT GÉRER DANS LE PROGRAMME (récapitulatif)
+--------------------------------------------------------
+  1. Détecter les 2 croix de façon robuste (marque au centre, bandeau gris,
+     fausses croix dans la grille, croix coupée par le bord).
+  2. Recaler la page (rotation + translation) avant de découper les cases.
+  3. Reconnaître et ignorer les pages de texte (pages 22, + 02123).
+  4. Découper avec une marge et gérer les dessins qui dépassent ou touchent
+     le cadre.
+  5. Séparer l'encre (couleur) des éléments imprimés (gris) pour ne pas
+     garder le cadre dans l'imagette et ne pas rater l'encre pâle.
+  6. Lire l'icône / la taille de chaque ligne dans la colonne de gauche.
+  7. Prévoir un rejet (et le noter dans le READ_ME) quand une croix est
+     introuvable ou quand les cadres ne retombent pas sur la grille.
