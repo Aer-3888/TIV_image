@@ -1,3 +1,6 @@
+# Problèmes d'images
+
+```text
 im 00104
 im 00105
  depassement de case
@@ -15,3 +18,5 @@ rotation/translation
  decomposer la deformation ou faire tout dun coup 
 
 
+
+```

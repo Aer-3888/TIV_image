@@ -1,3 +1,6 @@
+# Compte rendu des anomalies
+
+```text
 COMPTE RENDU - ANOMALIES DES SCANS NicIcon (NicIcon/all-scans)
 =================================================================
 
@@ -81,7 +84,7 @@ a) Marque au stylo sur la croix : beaucoup de scripteurs ont fait un petit
       l'intersection, il n'en reste que 3.
    -> Pour matchTemplate : la marque fait baisser le score, il faut un seuil
       tolérant (et un modèle à la bonne taille : la croix fait ~110 px dans le
-      scan, image_plus.png fait 71 px, il est trop petit).
+      scan, assets/image_plus.png fait 71 px, il est trop petit).
 b) Fausse croix : un dessin dans la grille peut ressembler à un "+" (icônes
    "+" / croix dans une case, ex : 01302, 02806, 02019). Il faut chercher dans
    une zone limitée autour de la position attendue et garder le candidat le
@@ -219,3 +222,5 @@ travailler sur la saturation (couleur) que sur le gris.
   6. Lire l'icône / la taille de chaque ligne dans la colonne de gauche.
   7. Prévoir un rejet (et le noter dans le READ_ME) quand une croix est
      introuvable ou quand les cadres ne retombent pas sur la grille.
+
+```

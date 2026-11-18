@@ -24,7 +24,7 @@ Point detectPlus(const Mat& gray, const Mat& tpl, Rect zone, double& score)
 int main()
 {
     Mat img = imread("../NicIcon/all-scans/00715.png");
-    Mat tpl = imread("../image_plus.png", IMREAD_GRAYSCALE);
+    Mat tpl = imread("../assets/image_plus.png", IMREAD_GRAYSCALE);
     if (img.empty() || tpl.empty()) { cout << "probleme lecture image" << endl; return 1; }
 
     Mat gray;

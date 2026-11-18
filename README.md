@@ -15,7 +15,7 @@ Theo, Thomas, Nedas and Matthis.
 
 The forms come from the NicIcon dataset. 35 scripters each filled 22 forms, drawing 14 emergency icons (accident, bomb, car, fire, police...) in boxes, five boxes per row. Forms 00 and 01 have no size given. Forms 02 to 21 ask for each icon in a random order and in a given size (small, medium or large).
 
-`00000.png` is a sample scan (scripter 000, form 00).
+`docs/images/00000.png` is a sample scan (scripter 000, form 00).
 
 ## Output
 
@@ -28,6 +28,8 @@ Every extracted drawing is saved without its box border, as a PNG with a text fi
 | `src/`, `include/`, `CMakeLists.txt` | C++ / OpenCV processing chain            |
 | `review-tool/`                           | Script to check the extracted snippets   |
 | `*.pdf`                                  | Project subject and course slides        |
+| `docs/`                                  | Notes, anomaly report and sample scan    |
+| `assets/`                                | Template image of the "+" cross          |
 
 ## Review tool
 
