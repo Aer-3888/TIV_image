@@ -1,10 +1,35 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <opencv2/imgcodecs.hpp>
 
 int main()
 {
+    const std::vector<std::string> categories = {
+        "accident",
+        "bomb",
+        "car",
+        "casualty",
+        "electricity",
+        "fire",
+        "fire_brigade",
+        "gas",
+        "injury",
+        "paramedics",
+        "person",
+        "police",
+        "road_block",
+        "flood"
+    };
+
+    const std::vector<std::string> size = {
+        "none",
+        "small",
+        "medium",
+        "large"
+    };
+
     const std::string projectDir = TIV_IMAGE_SOURCE_DIR;
     const std::string inputPath = projectDir + "/straight_00715.png";
     const std::string outputDir = projectDir + "/output";
