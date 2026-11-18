@@ -24,3 +24,10 @@ add_executable(align_pages
         src/alignment.cpp
         src/align_pages.cpp)
 target_link_libraries(align_pages ${OpenCV_LIBS})
+
+
+add_executable(binary_strip
+        include/histogram.hpp
+        src/histogram.cpp
+        src/binaryStrip.cpp)
+target_link_libraries(binary_strip ${OpenCV_LIBS})

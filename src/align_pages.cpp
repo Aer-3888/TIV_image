@@ -26,7 +26,7 @@ int main(int argc, char** argv)
         else folder = arg;
     }
 
-    Mat templ = imread("../image_plus.png", IMREAD_GRAYSCALE);
+    Mat templ = imread("../assets/image_plus.png", IMREAD_GRAYSCALE);
     vector<String> files;
     glob(folder + "/*.png", files);
 

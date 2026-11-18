@@ -4,7 +4,7 @@
 #include "opencv2/core.hpp"
 
 /*
- * Detection of the 2 "+" crosses (template image_plus.png) and computation of the
+ * Detection of the 2 "+" crosses (template assets/image_plus.png) and computation of the
  * transformation matrix that puts the page back straight.
  *
  * Case 1: both crosses are found -> we compute the transformation
