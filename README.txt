@@ -1,4 +1,5 @@
-Lancer lï¿½IDE CLion avec la commande clion
+
+Lancer lÕIDE CLion avec la commande clion
 
 Importer le projet
 

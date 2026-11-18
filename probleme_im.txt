@@ -1,0 +1,17 @@
+im 00104
+im 00105
+ depassement de case
+
+rotation/translation
+    -im 00715
+    -im 00716
+
+
+ page avec texte
+
+
+
+
+ decomposer la deformation ou faire tout dun coup 
+
+

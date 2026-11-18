@@ -15,3 +15,12 @@ add_executable(Projet_OpenCV_CMake
 
 target_link_libraries(Projet_OpenCV_CMake ${OpenCV_LIBS})
 
+
+add_executable(test_detect_plus src/test_detect_plus.cpp)
+target_link_libraries(test_detect_plus ${OpenCV_LIBS})
+
+add_executable(align_pages
+        include/alignment.hpp
+        src/alignment.cpp
+        src/align_pages.cpp)
+target_link_libraries(align_pages ${OpenCV_LIBS})
