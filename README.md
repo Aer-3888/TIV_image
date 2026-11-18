@@ -48,7 +48,7 @@ cd build && cmake .. && make binary_strip && ./binary_strip
 | ------------------------------------------ | ---------------------------------------- |
 | `src/`, `include/`, `CMakeLists.txt` | C++ / OpenCV processing chain            |
 | `review-tool/`                           | Script to check the extracted snippets   |
-| `*.pdf`                                  | Project subject and course slides        |
+| `docs/*.pdf`                             | Project subject and course slides        |
 | `docs/images/`                           | Sample scan                              |
 | `assets/`                                | Template image of the "+" cross          |
 
