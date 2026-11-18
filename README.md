@@ -32,8 +32,6 @@ mkdir -p build && cd build && cmake .. && make align_pages
 ./align_pages [folder] [--show]   # default folder: ../NicIcon/all-scans
 ```
 
-Anomalies found in the dataset (text pages, rotated pages, drawings crossing a box...) are described in [docs/compte_rendu_anomalies.md](docs/compte_rendu_anomalies.md). Open points are in [docs/a_faire.md](docs/a_faire.md).
-
 ## Binary strip
 
 Each form has a binary code in the header bar that gives the page number, so no OCR is needed. `src/binaryStrip.cpp` crops the bar, binarizes it with Otsu, finds the contours and maps each one to a bit position (first position at 27.5 px, 55.7 px pitch, 15 bits), then prints the bits and their value.
@@ -51,7 +49,7 @@ cd build && cmake .. && make binary_strip && ./binary_strip
 | `src/`, `include/`, `CMakeLists.txt` | C++ / OpenCV processing chain            |
 | `review-tool/`                           | Script to check the extracted snippets   |
 | `*.pdf`                                  | Project subject and course slides        |
-| `docs/`                                  | Notes, anomaly report and sample scan    |
+| `docs/images/`                           | Sample scan                              |
 | `assets/`                                | Template image of the "+" cross          |
 
 ## Review tool

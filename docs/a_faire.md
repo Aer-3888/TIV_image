@@ -1,9 +1,0 @@
-# A faire
-
-```text
--detecter les plus des images
-    -verifier si page est flipped
-    -croix manquantes ou illisible
--calculer transformation a faire sur l'image
--faire transformation
-```
