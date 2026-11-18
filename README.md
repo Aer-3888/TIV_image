@@ -21,6 +21,29 @@ The forms come from the NicIcon dataset. 35 scripters each filled 22 forms, draw
 
 Every extracted drawing is saved without its box border, as a PNG with a text file next to it describing it (label, scripter, page, row, column, size). Results are grouped by label and size, for example `car/small/` or `car/none/` when no size is given.
 
+## Page alignment
+
+The scans are slightly rotated, shifted or scaled, so the first step is to put each page back straight. Every form has two "+" crosses (top-right and bottom-left). They are found by template matching with `assets/image_plus.png`, then a rotation + scale + translation is computed to bring them to their reference position (`src/alignment.cpp`, `include/alignment.hpp`).
+
+If a cross is missing or unreadable, the page is marked as not processable and listed in `not_processable.txt`.
+
+```bash
+mkdir -p build && cd build && cmake .. && make align_pages
+./align_pages [folder] [--show]   # default folder: ../NicIcon/all-scans
+```
+
+Anomalies found in the dataset (text pages, rotated pages, drawings crossing a box...) are described in [docs/compte_rendu_anomalies.md](docs/compte_rendu_anomalies.md). Open points are in [docs/a_faire.md](docs/a_faire.md).
+
+## Binary strip
+
+Each form has a binary code in the header bar that gives the page number, so no OCR is needed. `src/binaryStrip.cpp` crops the bar, binarizes it with Otsu, finds the contours and maps each one to a bit position (first position at 27.5 px, 55.7 px pitch, 15 bits), then prints the bits and their value.
+
+This is still a prototype: the scan path is hardcoded, and it is not yet connected to the page alignment step.
+
+```bash
+cd build && cmake .. && make binary_strip && ./binary_strip
+```
+
 ## Repository
 
 | Path                                       | Content                                  |
