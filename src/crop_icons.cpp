@@ -48,22 +48,24 @@ int main()
 
     cv::Mat grayImage; //gray image for thresholding
     cv::Mat binaryImage; //binary image after thresholding
-    cv::Mat hsvImage; //hsv image for color filtering
+    cv::Mat hsvImage; //hsv image for color filtering (easier than BGR because it isolates hue from lighting and brightness)
     cv::Mat blueInkMask; //mask for blue color (ink color)
 
     cv::cvtColor(workingArea, grayImage, cv::COLOR_BGR2GRAY);
     cv::cvtColor(workingArea, hsvImage, cv::COLOR_BGR2HSV);
 
     //filter blue color (ink color)
-    cv::inRange(hsvImage, cv::Scalar(75, 80, 90),
-                cv::Scalar(105, 255, 255), blueInkMask);
+    cv::inRange(hsvImage, 
+        cv::Scalar(75, 80, 90), //hue between 75 and 105
+        cv::Scalar(105, 255, 255), // sat > 80 and Value > 90
+        blueInkMask); //put it in the mask (mask is just white pixels when its in range)
 
-    //thresholding to get binary image
+    //thresholding to get binary image from the grayImage
     cv::adaptiveThreshold(
         grayImage, binaryImage, 255,
-        cv::ADAPTIVE_THRESH_MEAN_C,
-        cv::THRESH_BINARY_INV,
-        15, 5
+        cv::ADAPTIVE_THRESH_MEAN_C, //adapt to local light differences
+        cv::THRESH_BINARY_INV, //so lines and symbols become white
+        15, 5 //mean of pixel in a 15x15 area and we remove 5 from the result
     );
 
     binaryImage.setTo(0, blueInkMask); //remove blue form the binary image
@@ -83,12 +85,14 @@ int main()
     cv::erode(vertical, vertical, verticalStructure);
     cv::dilate(vertical, vertical, verticalStructure);
 
-    //line fusion
+    //line fusion (of the 2 images)
     cv::Mat grid = horizontal + vertical;
 
     // detect contours (boxes)
     std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(grid, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(grid, contours, 
+        cv::RETR_EXTERNAL,  //only external contours
+        cv::CHAIN_APPROX_SIMPLE); //approx a line with 2 points only
 
     cv::Mat debugImage = workingArea.clone(); //debug image to draw boxes on
 
