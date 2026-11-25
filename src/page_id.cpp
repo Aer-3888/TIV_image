@@ -19,6 +19,11 @@ vector<int> readBits(const Mat& image)
     Mat gray;
     cvtColor(roi, gray, COLOR_BGR2GRAY);
 
+    Mat hsv, blueInkMask;
+    cvtColor(roi, hsv, COLOR_BGR2HSV);
+    inRange(hsv, Scalar(75, 80, 90), Scalar(105, 255, 255), blueInkMask); //blue ink filter from grid.cpp
+    gray.setTo(255, blueInkMask); //the handwritten X becomes white like its window, so it can't split it
+
     Mat binary;
     threshold(gray, binary, 0, 255, THRESH_BINARY | THRESH_OTSU);
 
@@ -35,6 +40,9 @@ vector<int> readBits(const Mat& image)
 
     for (const auto& contour : contours) {
         cv::Rect box = cv::boundingRect(contour);
+        if (box.width < 30 || box.width > 60 || box.height < 30 || box.height > 55) {
+            continue; //not a window (a window is about 46x46), e.g. the white paper at the edge of the crop
+        }
         double centerX = box.x + box.width / 2.0;
 
         int position = static_cast<int>(
