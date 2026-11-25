@@ -44,3 +44,8 @@ add_executable(label_pages src/label_pages.cpp)
 target_link_libraries(label_pages tiv_core)
 target_compile_definitions(label_pages PRIVATE
         "TIV_IMAGE_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+
+add_executable(evaluate_labels src/evaluate_labels.cpp)
+target_link_libraries(evaluate_labels ${OpenCV_LIBS})
+target_compile_definitions(evaluate_labels PRIVATE
+        "TIV_IMAGE_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
