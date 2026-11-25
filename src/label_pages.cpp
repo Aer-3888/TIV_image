@@ -20,6 +20,7 @@
 #include "alignment.hpp"
 #include "grid.hpp"
 #include "label_matching.hpp"
+#include "page_id.hpp"
 
 namespace fs = std::filesystem;
 
@@ -120,14 +121,14 @@ int main(int argc, char** argv)
         out.labels << "page,row,icon,size,icon_score,size_score\n";
 
         for (const cv::String& file : files) {
-            const std::string pageId = fs::path(file).stem().string();
             const cv::Mat scan = cv::imread(file, cv::IMREAD_COLOR);
             const PageAlignment alignment = scan.empty() ? PageAlignment() : alignPage(scan, cross);
             if (!alignment.processable) {
-                out.notProcessable << pageId << '\n';
+                out.notProcessable << fs::path(file).filename().string() << '\n';
                 continue;
             }
-            labelPage(straightenPage(scan, alignment), pageId, templates, options, out);
+            const cv::Mat straight = straightenPage(scan, alignment);
+            labelPage(straight, readPageId(straight), templates, options, out);
         }
         std::cout << files.size() << " scans processed, results in " << options.outDir << '\n';
     } catch (const std::exception& e) {

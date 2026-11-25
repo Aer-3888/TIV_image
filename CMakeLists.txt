@@ -22,7 +22,8 @@ target_link_libraries(test_detect_plus ${OpenCV_LIBS})
 add_library(tiv_core
         src/alignment.cpp
         src/grid.cpp
-        src/label_matching.cpp)
+        src/label_matching.cpp
+        src/page_id.cpp)
 target_link_libraries(tiv_core PUBLIC ${OpenCV_LIBS})
 
 add_executable(crop_icons src/crop_icons.cpp)
@@ -38,7 +39,7 @@ add_executable(binary_strip
         include/histogram.hpp
         src/histogram.cpp
         src/binaryStrip.cpp)
-target_link_libraries(binary_strip ${OpenCV_LIBS})
+target_link_libraries(binary_strip tiv_core)
 
 add_executable(label_pages src/label_pages.cpp)
 target_link_libraries(label_pages tiv_core)
