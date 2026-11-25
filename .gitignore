@@ -4,8 +4,10 @@ __pycache__/
 # Projet C++
 build/
 NicIcon/
+dataset/BDD_test/
 .DS_Store
 output/
+results/
 
 *.zip
 generated/
