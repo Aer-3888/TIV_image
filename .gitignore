@@ -5,6 +5,7 @@ __pycache__/
 build/
 NicIcon/
 .DS_Store
+output/
 
 *.zip
 generated/

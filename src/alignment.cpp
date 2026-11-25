@@ -2,6 +2,9 @@
 
 #include <cmath>
 #include "opencv2/imgproc.hpp"
+#if CV_VERSION_MAJOR >= 5
+#include "opencv2/geometry.hpp"   // getRotationMatrix2D moved here in OpenCV 5
+#endif
 
 using namespace cv;
 
