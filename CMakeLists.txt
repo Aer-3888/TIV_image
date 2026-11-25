@@ -21,7 +21,8 @@ target_link_libraries(test_detect_plus ${OpenCV_LIBS})
 
 add_library(tiv_core
         src/alignment.cpp
-        src/grid.cpp)
+        src/grid.cpp
+        src/label_matching.cpp)
 target_link_libraries(tiv_core PUBLIC ${OpenCV_LIBS})
 
 add_executable(crop_icons src/crop_icons.cpp)
@@ -38,3 +39,8 @@ add_executable(binary_strip
         src/histogram.cpp
         src/binaryStrip.cpp)
 target_link_libraries(binary_strip ${OpenCV_LIBS})
+
+add_executable(label_pages src/label_pages.cpp)
+target_link_libraries(label_pages tiv_core)
+target_compile_definitions(label_pages PRIVATE
+        "TIV_IMAGE_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
