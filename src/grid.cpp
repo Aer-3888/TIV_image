@@ -58,9 +58,12 @@ std::map<int, std::vector<cv::Rect>> sortBoxesBySection(const cv::Mat& workingAr
     //categorize boxes by y coordinate (categs)
     for (size_t i = 0; i < contours.size(); ++i){
         const cv::Rect box = cv::boundingRect(contours[i]);
+        if (box.width < 200 || box.width > 330 || box.height < 200 || box.height > 330) {
+            continue; //not a box (a box is about 265x265), so a page without boxes gives no section
+        }
         bool isNewSection = true;
         for (auto& section : contourBoxesSortBySection){
-            if (abs(box.y - section.first) < 3){
+            if (abs(box.y - section.first) < 20){ //boxes of a row can be a few pixels apart after straightening
                 section.second.push_back(box);
                 isNewSection = false;
                 break;
